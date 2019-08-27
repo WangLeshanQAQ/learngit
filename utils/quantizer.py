@@ -68,9 +68,9 @@ class activation_quantize_fn(nn.Module):
 # Low bitwidth quantization of gradients:
 def net_grad_qn(module, gbit):
     batch_size = 128
-    # equation 12 only dr to quantize
+    # equation 12 : only dr to quantize
     def dr_quantize_fn(dr, gbit, type, batch_size):
-        # dim 1 : max value of every row/
+        # dim=1 : max value of every row
         l, _ = dr.reshape(dr.size()[0], -1).abs_().max(dim=1)
         
         # full connected layers
@@ -89,12 +89,12 @@ def net_grad_qn(module, gbit):
         dr = m * (ro - 0.5)
     return dr.float()
 
-# Linear layers : grad_input = (db, dr, dw)
-# eg: (torch.Size([10]) torch.Size([128, 4096]) torch.Size([4096, 10]))
-def hook_grad_backward_fl(module, grad_input, grad_output):
-    dr_qn = dr_quantize_fn(grad_input[1], gbit, 'fl', batch_size)
-    new_grad_input = (grad_input[0], dr_qn, grad_input[2])
-    return new_grad_input
+    # Linear layers : grad_input = (db, dr, dw)
+    # eg: (torch.Size([10]) torch.Size([128, 4096]) torch.Size([4096, 10]))
+    def hook_grad_backward_fl(module, grad_input, grad_output):
+        dr_qn = dr_quantize_fn(grad_input[1], gbit, 'fl', batch_size)
+        new_grad_input = (grad_input[0], dr_qn, grad_input[2])
+        return new_grad_input
     
     # Convolution layers ： grad_input = (dr, dw, db)
     # eg: (torch.Size([128, 256, 3, 3]) ,torch.Size([256, 256, 3, 3]) ,torch.Size([256]))
