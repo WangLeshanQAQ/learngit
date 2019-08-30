@@ -18,6 +18,7 @@ class DigitNet_Q(nn.Module):
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2, padding=0),  # 18
             # nn.Dropout(0.2),
+            activation_quantize_fn(a_bit=abit),
 
             # conv 1
             Conv2d(48, 64, kernel_size=3, stride=1, padding=1),  # 18

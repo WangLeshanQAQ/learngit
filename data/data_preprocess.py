@@ -2,6 +2,7 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
+
 def cifar_transform(is_training=True):
     if is_training:
         transform_list = [transforms.RandomHorizontalFlip(),
@@ -17,10 +18,11 @@ def cifar_transform(is_training=True):
     transform_list = transforms.Compose(transform_list)
     return transform_list
 
+
 def cifar_dataset():
     # Loading and normalizing CIFAR10
     train_dataset = torchvision.datasets.CIFAR10(
-        root='./data', train=True, download=True,
+        root='./data/cifa10', train=True, download=True,
         transform=cifar_transform(is_training=True))
 
     train_loader = torch.utils.data.DataLoader(
@@ -30,7 +32,7 @@ def cifar_dataset():
         num_workers=20)
 
     eval_dataset = torchvision.datasets.CIFAR10(
-        root='./data', train=False, download=True,
+        root='./data/cifa10', train=False, download=True,
         transform=cifar_transform(is_training=False))
 
     eval_loader = torch.utils.data.DataLoader(
@@ -42,11 +44,13 @@ def cifar_dataset():
     len_eval_dataset = len(eval_dataset)
     return train_loader, eval_loader, len_eval_dataset
 
+
 def svhn_transform(is_training=True):
     if is_training:
         # Former author's code settings
         transform_list = [transforms.Resize((40, 40)),
-                          transforms.ColorJitter(brightness=30, contrast=(0.5, 1.5)),
+                          # brightness=30,
+                          # transforms.ColorJitter(brightness=0., contrast=(0.5, 1.5)),
                           transforms.ToTensor(),
                           transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                                std=[0.229, 0.224, 0.225])]
@@ -58,6 +62,7 @@ def svhn_transform(is_training=True):
 
     transform_list = transforms.Compose(transform_list)
     return transform_list
+
 
 def svhn_dataset():
     # Loading and normalizing SVHN
@@ -85,5 +90,6 @@ def svhn_dataset():
         num_workers=20,
         drop_last=True)
 
-    len_eval_dataset = len(eval_dataset)
-    return train_loader, eval_loader, len_eval_dataset
+    len_train_dataset = 572 * 128
+    len_eval_dataset = 203 * 128
+    return train_loader, eval_loader, len_train_dataset, len_eval_dataset

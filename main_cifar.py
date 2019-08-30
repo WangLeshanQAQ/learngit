@@ -1,7 +1,8 @@
-import torch
-from models.alexnet_dorefa import *
-from models.svhn_digit_dorefa import *
-from utils.data_preprocess import *
+import time
+from datetime import datetime
+from utils.quantizer import *
+from models.imgnet_alexnet_dorefa import *
+from data.data_preprocess import *
 from utils.train_test import *
 
 # define model, Loss function, optimizer, lr_scheduler
