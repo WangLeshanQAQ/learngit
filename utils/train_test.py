@@ -1,7 +1,4 @@
-import time
-from datetime import datetime
 
-from utils.quantizer import *
 
 '''
     train_loader : 73257, #drop_last : 572 * 128, iter = 572
